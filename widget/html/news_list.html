@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>新闻前瞻列表</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<style>
+			#news-slide .slide-node-title {
+				position: absolute;
+				width: 100%;
+				padding-left: 0.5rem;
+				left: 0;
+				bottom: 0;
+				height: 2rem;
+				line-height: 2rem;
+				background-color: rgba(0,0,0,.5);
+				color: white;
+				font-size: 0.75rem;
+			}
+			.read-icon {
+				padding-left: 1.1rem;
+				background-image: url(../icon/read_icon60x60.png);
+				background-repeat: no-repeat;
+				background-position: left middle;
+				background-size: auto 100%;
+			}
+			.aui-slide-page-wrap {
+				padding-right: 1rem;
+			}
+		</style>
+	</head>
+	
+	<script type="text/html" id="NewsItemTpl">
+		<li class="aui-list-item" tapmode id="<%=Id%>">
+			<div class="aui-list-item-inner">
+				<div class="aui-list-item-title aui-font-size-16 aui-ellipsis-1 color-black">
+					<%=Title%>
+				</div>
+				<div class="aui-list-item-text">
+					<div class="aui-text-left">
+						<%=AddTime%>
+					</div>
+					<div class="aui-list-item-right read-icon">
+						<%=Hits%>
+					</div>
+				</div>
+				<div class="aui-list-item-text aui-margin-5">
+					<%=Abstract%>
+				</div>
+			</div>
+		</li>
+	</script>
+	
+	<body>
+	    <div id="StatusScreen" class="aui-padded-15" onclick="ReloadData()" style="position:absolute;top:0;left:0;width:100%;height:100%;color:gray;text-align:center;">
+	                              数据加载中...
+	    </div>
+		<div class="aui-content" style="display:none">
+			<div id="news-slide">
+				<div class="aui-slide-wrap">
+					<!--<div class="aui-slide-node" tapmode>
+						<img src="http://m.310tv.com/uplodeImg/news/phone/20170211102349.jpg" />
+						<div class="slide-node-title aui-ellipsis-1">
+							阿森纳以往战绩占优 赫尔城难取分
+						</div>
+					</div>-->					
+				</div>
+				<div class="aui-slide-page-wrap"></div>
+			</div>
+			<ul class="aui-list aui-media-list aui-font-size-12" id="NewsList" style="background-color:#F9F9F9">
+				<!--<li class="aui-list-item" tapmode>
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-title aui-font-size-16 aui-ellipsis-1 color-black">
+							20时免费直播广州恒大VS东方体育：大胜奖金千万
+						</div>
+						<div class="aui-list-item-text">
+							<div class="aui-text-left">
+								2017-02-22 15:53
+							</div>
+							<div class="aui-list-item-right read-icon">
+								20
+							</div>
+						</div>
+						<div class="aui-list-item-text aui-margin-5">
+							北京时间今晚(2月22日)20：00；2017亚冠联赛小组首轮赛事继续进行，其中310直播将免费直播广州恒大VS香港东方体育的亚冠比赛；香港东方体育是该小组公认鱼腩弱旅，恒大首战的目标理应是大胜；同时也作为磨合接下来超级杯直播中和江苏苏宁的强强对话。
+						</div>
+					</div>
+				</li>-->
+			</ul>
+			<div id="MoreBlock" class="bottom-more-btn" style="display:none">
+				上拉加载更多
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/aui-slide.js"></script>
+	<script type="text/javascript" src="../script/artTemplate-native.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript">
+
+		apiready = function() {
+	        g_sportsType=api.pageParam.sportsType;
+	        g_pageIndex=1;
+	        g_pageSize=10;
+	        var isLoadNews=	api.pageParam.isLoadNews;
+	        if(isLoadNews===true){
+	            SetNewsIndexDom();
+	        }
+            else{
+                AjaxNewsIndexListData(SetNewsIndexDom);
+            }		
+		    
+		    api.setRefreshHeaderInfo({
+				visible : true,
+				showTime : false,
+				bgColor : 'rgb(255,255,255)',
+				textColor : 'rgb(0,0,0)',
+				textLoading : '加载中...'
+			}, function(ret, err) {			    
+				api.refreshHeaderLoadDone();
+				AjaxNewsIndexListData(SetNewsIndexDom);
+			});
+		    
+		    g_pullUpLoadingObj=CustomPullUpLoading(function(isLoading,loadObj){
+		        if(!isLoading&&!loadObj.isNoMore){
+		            g_pullUpLoadingObj.setLoading();
+		            AjaxNewsPageList(AppendNewsPageList);
+		        };
+		    });
+		    
+			$("#news-slide,#NewsList").on("click", ".aui-slide-node,.aui-list-item", function() {
+				var newsId=$(this).attr("id");
+				api.openWin({
+					name : 'news_detail_frm',
+					url : 'sub_common_frm.html',
+					animation : {
+						type : 'movein',
+						subType : 'from_right',
+						duration : 300
+					},
+					reload : true,
+					pageParam : {
+						frameOpts : {
+							name : 'news_detail',
+							url : 'news_detail.html',
+							bounces : true,
+							pageParam:{
+							    newsId:newsId
+							}
+						}
+					}
+				});
+			});
+		};
+		
+		function AjaxNewsIndexListData(callback){
+		    var url=Global.url.newsListData;
+		    Fun.showProgress();
+		    $("#StatusScreen").html("数据加载中...");
+		    api.ajax({
+	            url:url,
+	            dataType:'text'
+            },function(ret,err){
+                Fun.hideProgress();
+                if(!err){
+                    var newsIndexListObj;
+                    try{
+                        newsIndexListObj=JSON.parse(ret);
+                    }
+                    catch(e){
+                       $("#StatusScreen").html("数据加载失败，请点击重试");
+                       Fun.toast("数据类型有误");
+                    }
+                    
+                    if(newsIndexListObj&&newsIndexListObj.IsSuccess){
+                       Global.setNewsList(newsIndexListObj);
+                       
+                       api.execScript({
+                           name:'root',
+	                       script: 'g_isLoadNews=true;'
+                       });
+                       
+                       callback&&callback(newsIndexListObj);
+                    }
+                }
+                else{
+                    $("#StatusScreen").html("数据加载失败，请点击重试");
+                    Fun.ajaxErrCallBack(err);
+                }
+            });
+		}
+		
+		function SetNewsIndexDom(){		    
+		    var sportsType=g_sportsType;		    		    
+		    if(!(sportsType==1 || sportsType==2)){
+		        $("#StatusScreen").html("数据加载失败，请点击重试");
+		        return;
+		    }
+		    
+		    $("#StatusScreen").hide().html("");
+		    $(".aui-content").show();
+		    
+		    var newIndexList=Global.getNewsList();
+		    var flashNewsList=sportsType==1?newIndexList.FootballFlashNews:newIndexList.BasketballFlashNews;
+		    var newsList=sportsType==1?newIndexList.FootballNews:newIndexList.BasketballNews;
+		    
+		    //设置Flash新闻dom
+		    $("#news-slide .aui-slide-wrap").html('');
+		    $.each(flashNewsList,function(flashIndex,flashItem){
+		        var flashItemHtml='<div class="aui-slide-node" tapmode id="'+flashItem.Id+'">';
+					flashItemHtml+=	'<img src="'+flashItem.ImgSrc+'" />';
+					flashItemHtml+=	'<div class="slide-node-title aui-ellipsis-1">';
+					flashItemHtml+=	flashItem.Title;
+					flashItemHtml+=	'</div>';
+					flashItemHtml+='</div>';
+					
+			    $("#news-slide .aui-slide-wrap").append(flashItemHtml);
+		    });
+		    
+		    //设置普通新闻dom
+		    $("#NewsList").html('');
+		    $.each(newsList,function(newsIndex,newsItem){
+		        $("#NewsList").append(template("NewsItemTpl",newsItem));
+		    });
+		    
+		    //初始化Flash新闻轮播
+		    var newsSlide = new auiSlide({
+				container : document.getElementById("news-slide"),
+				//width:"",
+				height : 180,
+				speed : 500,
+				autoPlay : 5000,
+				loop : true,
+				pageShow : true,
+				pageStyle : "dot",
+				dotPosition : "right"
+			});		
+			
+			Fun.imageErrorHandle();
+			
+			window.g_pullUpLoadingObj&&g_pullUpLoadingObj.init();
+			g_pageIndex=1;
+			
+			Fun.tap();
+		}
+		
+		function ReloadData(){
+		    AjaxNewsIndexListData(SetNewsIndexDom);
+		}
+		
+		function AjaxNewsPageList(callback){
+		    var url=Global.url.newsPageListData;
+		    var pageIndex=g_pageIndex;
+		    var pageSize=g_pageSize;
+		    var sportsType=g_sportsType;
+		    url=url+"?pageIndex="+(pageIndex+1)+"&pageSize="+pageSize+"&sportsType="+sportsType;
+		    
+		    api.ajax({
+	            url:url,
+	            dataType:'text',
+            },function(ret,err){
+            	if(!err){
+            	    var newsPageListObj;
+                    try{
+                        newsPageListObj=JSON.parse(ret);
+                    }
+                    catch(e){
+                       Fun.toast("数据类型有误");
+                    }
+                    
+                    if(newsPageListObj&&newsPageListObj.IsSuccess){
+                       callback&&callback(newsPageListObj);
+                    }
+            	}else{
+            	    Fun.ajaxErrCallBack(err);
+            	}
+            });
+		}
+		
+		function AppendNewsPageList(newsPageListObj){
+		    var newsPageList=newsPageListObj.NewsPageList;
+		    var pageIndex=newsPageListObj.PageIndex;
+		    var pageSize=newsPageListObj.PageSize;
+		    
+		    if(newsPageList&&newsPageList.length>0){
+		        $.each(newsPageList,function(newsIndex,newsItem){
+		            $("#NewsList").append(template("NewsItemTpl",newsItem));
+		        });
+		        
+		        g_pageIndex=pageIndex+1;
+		        g_pullUpLoadingObj.setLoaded(true);
+		    }else{
+		        g_pullUpLoadingObj.setNoMore();
+		    }
+		    
+		    Fun.tap();
+		}
+	</script>
+</html>

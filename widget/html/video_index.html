@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>视频列表</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<style>
+			.video-sub-title {
+				background: url(../image/title_bg35x45.jpg) repeat-x;
+				background-size: auto 100%;
+			}
+			.aui-list .video-item-title {
+				color: black;
+			}
+			.aui-list .video-item-tag {
+				color: #2767A7;
+				margin-top: 0.25rem
+			}
+			.video-more-btn {
+				width: 40%;
+				margin: 0.75rem auto;
+				height: 1.8rem;
+				line-height: 1.85rem;
+				background: #E9ECF1
+			}
+			.record-play-icon {
+				background: url(../image/record_play128x82.png) no-repeat;
+				width: 1.2rem;
+				height: 1.2rem;
+				background-size: 100% auto;
+				background-position: center;
+				padding-right: 0.25rem
+			}
+			#RecodeList {
+				margin-bottom: 2rem;
+			}
+			#RecodeList .aui-list-item-label-icon {
+				padding-right: 0.4rem;
+			}
+		</style>
+	</head>
+	
+	<script type="text/html" id="VideoItemTpl">
+		<li class="aui-list-item" videoid="<%=Id%>" tapmode>
+			<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-media">
+					<img src="<%=ImgSrc%>"/>
+				</div>
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-text video-item-title">
+						<%=Title%>
+					</div>
+					<div class="aui-list-item-text aui-font-size-12 video-item-tag">
+						标签：<%=Tages%>
+					</div>
+				</div>
+			</div>
+		</li>
+	</script>
+	
+	<script type="text/html" id="RecordItemTpl">
+	    <li class="aui-list-item" videoid="<%=Id%>" tapmode>
+		    <div class="aui-list-item-label-icon">
+			    <i class="record-play-icon"></i>
+			</div>
+			<div class="aui-list-item-inner">
+				<div class="aui-list-item-text">
+					<div class="aui-ellipsis-1">
+					<%=Title%>
+					</div>
+				</div>
+			</div>
+		</li>
+	</script>
+	
+	<body>
+		<div class="aui-content">
+			<!--最新视频 begin-->
+			<ul class="aui-list aui-media-list" id="NewestList">
+				<li class="aui-list-header video-sub-title">
+					最新视频
+				</li>
+				<!--<li class="aui-list-item">
+					<div class="aui-media-list-item-inner">
+						<div class="aui-list-item-media">
+							<img src="http://m.310tv.com/uplodeImg/video/phone/20170123223341.jpg"/>
+						</div>
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-text video-item-title">
+								【原创】一代传奇-皮尔洛
+							</div>
+							<div class="aui-list-item-text aui-font-size-12 video-item-tag">
+								标签：意甲直播 AC米兰 尤文图斯
+							</div>
+						</div>
+					</div>
+				</li>	-->			
+			</ul>
+			<div id="VideoMoreBtn" class="aui-btn aui-btn-block aui-font-size-14 video-more-btn" tapmode>
+				更多更新视频
+			</div>
+			<!--end 最新视频-->
+			<!--热门赛事录像 begin-->
+			<ul class="aui-list" id="RecodeList">
+				<li class="aui-list-header video-sub-title">
+					热门赛事录像
+				</li>
+				<!--<li class="aui-list-item">
+					<div class="aui-list-item-label-icon">
+						<i class="record-play-icon"></i>
+					</div>
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-text">
+							<div class="aui-ellipsis-1">
+								欧洲杯直播前瞻 威尔士VS斯洛伐克
+							</div>
+						</div>
+					</div>
+				</li>-->
+			</ul>
+			<!--end 热门赛事录像-->
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/artTemplate-native.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript">
+
+		apiready = function() {
+		    AjaxVideoIndexData(SetVideoIndexDom);
+		
+			$("#VideoMoreBtn").bind("click", function() {
+				api.openWin({
+					name : 'video_list_frm',
+					url : 'sub_common_frm.html',
+					animation : {
+						type : 'movein',
+						subType : 'from_right',
+						duration : 300
+					},
+					reload : false,
+					pageParam : {
+						frameOpts : {
+							name : 'video_list',
+							url : 'video_list.html',
+							bounces : true
+						}
+					}
+				});
+			});
+			
+			$("#NewestList,#RecodeList").on("click", ".aui-list-item", function() {
+				var videoId=$(this).attr("videoid");
+				api.openWin({
+					name : 'video_detail_frm',
+					url : 'sub_common_frm.html',
+					animation : {
+						type : 'movein',
+						subType : 'from_right',
+						duration : 300
+					},
+					pageParam : {
+						frameOpts : {
+							name : 'video_detail',
+							url : 'video_detail.html',
+							bounces : true,
+							pageParam:{
+							    videoId:videoId
+							}
+						}
+					}
+				});
+			});
+		};
+		
+		function AjaxVideoIndexData(callback){
+		    var url=Global.url.videoListData;
+		    Fun.showProgress();
+		    api.ajax({
+		        url:url,
+		        dataType:'text'
+		    },function(ret,err){
+		        Fun.hideProgress();
+		        if(!err){
+		            var videoNewsObj;
+		            try{
+		                videoNewsObj=JSON.parse(ret);
+		            }
+		            catch(e){
+		                Fun.toast("数据类型有误");
+		            }
+		            
+		            if(videoNewsObj&&videoNewsObj.IsSuccess){
+		                Global.setVideoList(videoNewsObj);
+		                callback&&callback(videoNewsObj);
+		            }
+		        }
+		        else{
+		            Fun.ajaxErrCallBack(err);
+		        }
+		    });
+		}
+		
+		function SetVideoIndexDom(){
+		    var sportsType=Global.getSportsType();
+		    var videoNewsObj=Global.getVideoList();
+		    
+		    var newestList=sportsType==1?videoNewsObj.FootballNewestVideo:videoNewsObj.BasketballNewestVideo;
+		    var hotList=sportsType==1?videoNewsObj.FootballHotVideo:videoNewsObj.BasketballHotVideo;
+		    
+		    //最新视频
+		    $("#NewestList .aui-list-item").remove();
+		    $.each(newestList,function(newestIndex,newestObj){
+		        $("#NewestList").append(template("VideoItemTpl",newestObj));
+		    });
+		    
+		    //最热视频
+		    $("#RecodeList .aui-list-item").remove();
+		    $.each(hotList,function(hotIndex,hotObj){
+		        $("#RecodeList").append(template("RecordItemTpl",hotObj));
+		    });
+		    
+		    Fun.imageErrorHandle();
+		    Fun.tap();
+		}
+	</script>
+</html>

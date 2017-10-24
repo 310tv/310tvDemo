@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>310tv Demo</title>
+		<link rel="stylesheet" type="text/css" href="./css/api.css" />
+		<link rel="stylesheet" type="text/css" href="./css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="./css/common.css" />
+		<style type="text/css">
+		    .header-round-width{
+		        width:130px!important
+		    }
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav main-header-bg" id="Header">
+			<a class="aui-pull-left aui-btn"> 
+			    <img class="full-height" src="./image/logo300x89.jpg" /> 
+			</a>
+			<div class="aui-bar-btn aui-bar-btn-round header-round-width" id="SportRound">
+				<div class="aui-bar-btn-item aui-active" tapmode>
+					足球
+				</div>
+				<div class="aui-bar-btn-item" tapmode>
+					篮球
+				</div>
+			</div>
+		</header>
+		<footer class="aui-bar aui-bar-tab aui-border-t" id="Footer">
+			<div class="aui-bar-tab-item" tapmode>
+				<i class="aui-iconfont aui-icon-cert"></i>
+				<div class="aui-bar-tab-label">
+					前瞻
+				</div>
+			</div>
+			<div class="aui-bar-tab-item aui-active" tapmode>
+				<i class="aui-iconfont aui-icon-home"></i>
+				<div class="aui-bar-tab-label">
+					直播
+				</div>
+			</div>
+			<div class="aui-bar-tab-item" tapmode>
+				<i class="aui-iconfont aui-icon-video"></i>
+				<div class="aui-bar-tab-label">
+					视频
+				</div>
+			</div>
+		</footer>
+	</body>
+	<script type="text/javascript" src="./script/api.js"></script>
+	<script type="text/javascript" src="./script/aui-tab.js"></script>
+	<script type="text/javascript" src="./script/common.js"></script>
+	<script type="text/javascript">
+		(function() {
+		    g_frame_index=2;
+		    g_sportsType=1;
+		    g_isLoadNews=false;
+		    			
+			var footerTab = new auiTab({
+				element : $api.byId('Footer'),
+				index : g_frame_index,
+				repeatClick : false
+			}, function(ret) {
+				g_frame_index=ret.index;
+				OpenFrame(g_frame_index);
+			});
+			
+			var sportRoundTab = new auiTab({
+				element : $api.byId('SportRound'),
+				index : g_sportsType,
+				repeatClick : false
+			}, function(ret) {
+				g_sportsType=ret.index;
+				Global.setSportsType(ret.index);
+				AfterSetSportsType();
+				
+				if(g_frame_index==1){
+				    OpenFrame(g_frame_index);
+				}
+			});
+		})();
+		
+		apiready = function() {		    
+		    Global.setSportsType(g_sportsType);
+		    
+			api.parseTapmode();
+			
+			var headerEl = $api.byId('Header');
+			var footerEl=$api.byId('Footer');
+			//适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+			$api.fixStatusBar(headerEl);
+			//动态计算header的高度，因iOS7+和Android4.4+上支持沉浸式效果，
+			//因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度
+			//其中，IOS状态栏高度为20px，Android为25px
+			var headerH = $api.offset(headerEl).h;
+			//footer高度为css样式中声明的30px
+			var footerH = $api.offset(footerEl).h;
+			//frame的高度为当前window高度减去header和footer的高度
+			var frameH = api.winHeight - headerH - footerH;
+			
+			g_headerH=headerH;
+			g_frameH=frameH;
+			
+			api.setPrefs({
+	            key:'mainHeaderH',
+	            value:headerH
+            });
+            
+            api.setPrefs({
+                ket:'mainFooterH',
+                value:footerH
+            });
+			
+			OpenFrame(g_frame_index);
+			
+			//主界面检测返回键
+			api.addEventListener({
+	            name:'keyback'
+            },function(ret,err){
+            	api.confirm({
+            	    title:'提示',
+            	    msg:'确定要退出310TV吗？'         	    
+                },function(ret,err){ 
+                	var btnIndex=ret.buttonIndex;
+                	if(btnIndex==2){
+                	    api.closeWidget({
+	                        id: api.appId,
+	                        silent:true
+                        });
+                	}
+                });
+            });
+		};
+		
+		function OpenFrame(type){
+		    var name,url;
+		    var isBounces=false;
+		    var sportsType=Global.getSportsType();
+		    switch(parseInt(type)){
+		        case 1:
+		            name="news_list_"+sportsType;
+		            url="html/news_list.html";
+		            break;
+		        case 2:
+		            name="live_list_frm";
+		            url="html/live_list_frm.html";
+		            break;
+		        case 3:
+		            name="video_index";
+		            url="html/video_index.html";
+		            break;
+		    };
+		    
+		    console.log(name);
+		    
+		    api.openFrame({
+	            name: name,
+	            url: url,
+	            bounces: isBounces,
+	            rect: {
+		            x:0,
+		            y:g_headerH,
+		            w:'auto',
+		            h:g_frameH
+	            },
+	            pageParam:{
+	                sportsType:sportsType,
+	                isLoadNews:g_isLoadNews
+	            }
+            });
+            
+            if(type==2){
+                api.setFrameAttr({
+	                name: 'live_list',
+	                hidden:false
+                });
+            
+                api.bringFrameToFront({
+	                from: 'live_list'
+                });
+            }
+            
+            if(type==1){
+                api.setFrameAttr({
+	                name: 'news_list_'+(sportsType==1?2:1),
+	                hidden:true
+                });
+                
+                api.setFrameAttr({
+	                name: 'live_list_frm',
+	                hidden:true
+                });
+                
+                api.setFrameAttr({
+	                name: 'live_list',
+	                hidden:true
+                });
+                
+                api.setFrameAttr({
+	                name: 'video_index',
+	                hidden:true
+                });
+            }
+		}
+		
+		function AfterSetSportsType(){
+		    api.execScript({
+		        frameName:'live_list_frm',
+	            script: 'SwitchLiveTab();SetAttenBadge();'
+            });
+            
+            api.execScript({
+                frameName:'video_index',
+	            script: 'SetVideoIndexDom();'
+            });
+		}
+	</script>
+</html>

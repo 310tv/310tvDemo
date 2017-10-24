@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<style>
+			body {
+			}
+		</style>
+	</head>
+	<body>
+		<header class="aui-bar aui-bar-nav main-header-bg" id="Header">
+			<a class="aui-pull-left aui-btn" id="Back_Btn" tapmode> <span class="aui-iconfont aui-icon-left" tapmode></span> <img class="full-height" src="../image/logo300x89.jpg"/> </a>
+		</header>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#Back_Btn").bind("click", function() {
+				api.closeWin({});
+			});
+		});
+		
+		apiready = function() {		    
+		    var headerEl=$api.byId('Header');
+		    //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+			$api.fixStatusBar(headerEl);
+			var headerH = $api.offset(headerEl).h;
+			var frameH = api.winHeight - headerH;
+			var _rectOpts = {
+				rect : {
+					x : 0,
+					y : headerH,
+					w : 'auto',
+					h : frameH
+				}
+			};
+			var frameOpts = $.extend({}, api.pageParam.frameOpts, _rectOpts);
+			api.openFrame(frameOpts);
+			
+			Fun.tap();
+		};
+	</script>
+</html>

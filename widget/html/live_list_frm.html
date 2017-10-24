@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>直播列表导航</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<style type="text/css">
+			.live-tab .aui-tab-item {
+				height: 2rem;
+				line-height: 2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="aui-content">
+			<div class="aui-tab live-tab" id="LiveTab">
+				<div class="aui-tab-item aui-active" tapmode>
+					全部
+				</div>
+				<div class="aui-tab-item" tapmode>
+					直播中
+				</div>
+				<div class="aui-tab-item" tapmode>
+					未开始
+				</div>
+				<div class="aui-tab-item" tapmode>
+					已结束
+				</div>
+				<div class="aui-tab-item" tapmode>
+					关注
+					<div id="AttenBadge" class="aui-badge" style="display:none">0</div>
+				</div>
+			</div>			
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/aui-tab.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript">
+		(function() {
+		    //默认全部
+		    //1-全部，2-直播中，3-未开始，4-已结束，5-关注
+			g_live_status=1;						
+		})();
+		
+		apiready = function() {
+		    var headerH = $api.offset($api.byId('LiveTab')).h;
+		    var winH=api.winHeight;
+		    var frameH=api.frameHeight;
+		    var mainHeaderH=parseInt(api.getPrefs({
+	            sync:true,
+	            key:'mainHeaderH'
+            }));
+            var rectY=mainHeaderH+headerH;
+            var rectH=frameH-headerH;
+            
+            Global.setLiveStatus(g_live_status);          
+            
+            OpenLiveListFrame(rectY,rectH);
+                              
+            var liveTab = new auiTab({
+				element : $api.byId('LiveTab'),
+				index : g_live_status,
+				repeatClick : false
+			}, function(ret) {
+			    Global.setLiveStatus(ret.index);
+			    SwitchLiveTab();
+			});
+            
+            Fun.tap();   
+		};		
+		
+		function OpenLiveListFrame(y,h){		    		    	    		    
+		    api.openFrame({
+	            name: 'live_list',
+	            url: 'live_list.html',
+	            bounces:true,
+	            rect: {
+		            x:0,
+		            y:y,
+		            w:'auto',
+		            h:h
+	            },
+	            reload:false
+            });
+		}
+		
+		function SwitchLiveTab(){
+		    api.execScript({
+		        frameName:'live_list',
+	            script: 'SetMatchList();'
+            });
+		}
+		
+		function SetAttenBadge(){
+		    var sportsType=Global.getSportsType();
+		    var matchList=Global.getMatchList();
+		    var attenIds=Global.getAttentionIds();
+		    var attenNum=0;
+		    		    
+		    for(var i=0;i<matchList.length;i++){
+		        var matchItem=matchList[i];
+		        if(Global.isExistAttentionId(matchItem.ProgramsID)&&matchItem.SportsType==sportsType){
+		            attenNum++;
+		        }
+		    }
+		    
+		    if(attenNum>0){
+		        $("#AttenBadge").html(attenNum).show();
+		    }
+		    else{
+		        $("#AttenBadge").hide();
+		    }
+		}
+	</script>
+</html>

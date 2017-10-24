@@ -1,0 +1,34 @@
+.main-header-bg {
+	background: url(../image/top_bg80x89.jpg) bottom;
+}
+.submenu-bg {
+	background: url(../image/top_bg80x89.jpg) bottom;
+}
+.full-width {
+	width: 100%;
+}
+.full-height {
+	height: 100%;
+}
+.full-size {
+	width: 100%;
+	height: 100%;
+}
+.font-bold {
+	font-weight: bold;
+}
+.color-black {
+	color: black;
+}
+.bottom-more-btn {
+	height: 2.6rem;
+	line-height: 2.65rem;
+	text-align: center;
+	font-weight: 0.7rem;
+}
+.screen-status{
+    position:absolute;top:0;left:0;
+    width:100%;height:100%;color:gray;text-align:center;
+    padding: 0.75rem !important;
+    font-size:0.6rem;
+}

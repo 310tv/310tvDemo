@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>赛事频道播放选择列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        .play-sub-menu{
+            height:2rem;
+        }
+    	.play-sub-menu .aui-active{
+    	    background-color:#C30;
+    	    color:#FFC!important;
+    	}
+    	.team-pic-h{
+    	    height:3rem
+    	}
+    	#MatchStatus img{
+    	    display:none;
+    	}
+    	#MatchStatus.on span{
+    	    color:blue;
+    	}
+    	#MatchStatus.on img{
+    	    display:inline;
+    	}
+    	#MatchStatus.end span{
+    	    color:red;
+    	}
+    </style>
+</head>
+
+<body>
+	<div class="aui-content">
+	    <section class="aui-gird aui-margin-t-15 aui-font-size-14">
+	        <div class="aui-row aui-text-center">
+	            <!--<div class="aui-col-xs-4">
+	                <img src="http://zq.win007.com/Image/team/images/2013121221531.png" class="aui-inline team-pic-h">
+	                <div class="aui-grid-label aui-margin-5">纽卡斯尔联</div>
+	            </div>
+	            <div class="aui-col-xs-4">
+	                <div class="aui-grid-label aui-font-size-20"><b>VS</b></div>
+	                <div class="aui-grid-label aui-margin-5">02-21 04:00</div>
+	                <div class="aui-grid-label aui-margin-5">未开始</div>
+	            </div>
+	            <div class="aui-col-xs-4">
+	                <img src="http://zq.win007.com/Image/team/images/2013121220444.png" class="aui-inline team-pic-h">
+	                <div class="aui-grid-label aui-margin-5">阿斯顿维拉</div>
+	            </div>-->
+	            
+	            <div class="aui-col-xs-4">
+	                <img src="../image/nopic80x80.gif" class="aui-inline team-pic-h" id="HomeFlag">
+	                <div class="aui-grid-label aui-margin-5" id="HomeTeam">&nbsp;</div>
+	            </div>
+	            <div class="aui-col-xs-4">
+	                <div class="aui-grid-label aui-font-size-20" id="MatchScore"><b>VS</b></div>
+	                <div class="aui-grid-label aui-margin-5" id="MatchTime"></div>
+	                <div class="aui-grid-label aui-margin-5" id="MatchStatus">
+	                    <span></span>
+	                    <img src="../image/football_in.gif"/>
+	                </div>
+	            </div>
+	            <div class="aui-col-xs-4">
+	                <img src="../image/nopic80x80.gif" class="aui-inline team-pic-h" id="GuestFlag">
+	                <div class="aui-grid-label aui-margin-5" id="GuestTeam">&nbsp;</div>
+	            </div>
+	        </div>
+	    </section>
+	    <div class="aui-bar aui-bar-btn aui-bar-btn-full aui-margin-t-10 submenu-bg aui-margin-b-15 play-sub-menu" id="SubMenu">
+	        <div style="border-color:transparent;color:white" class="aui-bar-btn-item" tapmode>
+	                          赛事前瞻
+	        </div>
+	        <div style="border-color:transparent;color:white" class="aui-bar-btn-item" tapmode>
+	                          视频直播
+	        </div>
+	    </div>
+	    <ul class="aui-list aui-list-in" id="MediaList">
+	        <!--<li class="aui-list-item" link="http://m.zqsos.com/channel/play.aspx?id=3179" tapmode>
+	            <div class="aui-list-item-inner aui-list-item-arrow">
+	                <div class="aui-list-item-title">赛事直播5</div>
+	            </div>
+	        </li>
+	        <li class="aui-list-item" link="http://www.tiantian.tv/channel/ttzb2.html" tapmode>
+	            <div class="aui-list-item-inner aui-list-item-arrow">
+	                <div class="aui-list-item-title">体育直播2</div>
+	            </div>
+	        </li>-->
+	    </ul>
+	    <div class="aui-content-padded" id="RichTextBox" style="display:none">
+	       <h1></h1>
+	       <div><p style="text-align:center;color:gray;">暂无数据</p></div>
+	       <!--<div class="aui-text-center">暂无数据</div>-->
+	       <!--<h1>亚冠杯直播：西悉尼流浪者vs浦和红钻</h1>
+    <p style="text-align:center"><img src="http://m.310tv.com/imgFiles/2017/02/20/a2842e55-3b30-41a1-8be5-e00cfd8f24b0.jpg" title="photo_617739.jpg" width="100%" border="0" hspace="0" vspace="0" style="width: 500px; height: 254px;"></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; line-height: 1.75em; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong><br></strong></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; line-height: 1.75em; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong>直播地址：【</strong></span><a href="http://tv.zqsos.com/channel/saishizhibo4.html" target="_blank" title="赛事直播4" textvalue="赛事直播4" style="color: rgb(255, 0, 0); text-decoration: underline;"><span style="color: rgb(255, 0, 0);">赛事直播4</span></a><span style="margin: 0px; padding: 0px; font-weight: inherit; line-height: 1.75em; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px; color: rgb(255, 0, 0);"><strong>&nbsp;</strong></span><span style="margin: 0px; padding: 0px; font-weight: inherit; line-height: 1.75em; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong>独家台】&nbsp;</strong></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong>&nbsp; &nbsp; &nbsp;&nbsp;</strong></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong style="color: rgb(255, 0, 0);"><a href="http://guess.310tv.com/" target="_blank" style="text-decoration: none; color: rgb(255, 0, 0);">&gt;&gt;&gt;查看每天更多赛事竞猜</a></strong></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding: 0px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, sans-serif, 宋体; white-space: normal; background-color: rgb(250, 251, 252); line-height: 1.75em;"><span style="margin: 0px; padding: 0px; font-weight: inherit; font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><strong style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; white-space: normal; background-color: rgb(250, 251, 252); color: rgb(255, 0, 0);"><a href="http://guess.310tv.com/" target="_blank" style="text-decoration: none; color: rgb(255, 0, 0);">&gt;&gt;&gt;</a><a href="http://www.310tv.com/tag/haoyetuijian/" target="_self" style="color: rgb(255, 0, 0);"><span style="margin: 0px; padding: 0px; font-weight: inherit;">查看更多赛事推荐</span></a></strong></span></p><p style="line-height: 1.75em;"><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;"><br></span></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">周二下午，亚冠分组赛F组将有好戏上演，澳洲球队西悉尼流浪者主场迎战日本球队浦和红钻。作为双方本届分组赛首战，相信他们今仗很大机会是以试探阵容为主，在彼此均无绝对的取胜把握的情况下，本场比赛不妨看好双方和气收场。</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">西悉尼流浪者作为2014年亚冠冠军得主，近两年在亚冠的成绩可谓一落千丈，先是在前届分组未能出线，而上一届甚至失去参赛资格。不过在上赛季的联赛中，西悉尼流浪者却以卷土重来之态战至最后一刻，尽管他们最后与冠军无缘，但无可否认的是在这支昔日亚洲冠军之师身上看到了曾经的韧性，今次再获亚冠参赛资格的他们显然不会轻易罢休。然而需要注意的是，澳职联的排名变化之大还快过天气，西悉尼流浪者本赛季在联赛的表现算是中规中矩，他们目前位列联赛中游附近，而从他们近期的战绩来看，整体发挥时好时坏。本场面对强敌浦和红钻的来袭，若无十足的准备恐怕都难以抵挡，当中则需提到他们的头号射手布兰登，目前已在联赛中攻入9球的他无疑是球队进攻端的一大倚仗，而此子近3轮联赛合共攻入3球，相信近期脚风颇顺的他将带领球队全力捍卫主场。</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">反观对手浦和红钻去年就经历了如同山车般的一个赛季，他们在前景一片大好的情况下被鹿岛鹿角逆袭，最终遗憾失掉联赛冠军。然而，他们之间的恩怨并未结束，在早前结束的日本超级杯中，尽管主力前锋兴梠慎三与武藤雄树下半场合力帮助球队扳平比分，但无奈他们最后还是遭到绝杀，再度惨淡收场。不过目前正一股怨气待泄的浦和红钻始终并非泛泛之辈，与西悉尼流浪者一样，这支来自日本的传统劲旅同样是曾经登上亚洲之巅的球队之一(2007年)，先不说能否在本场亚冠分组赛中全取3分，但如何全身而退还是他们力所能及之事。</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">结果分析：西悉尼在近两年都没有较大的进展，实力较夺冠那年降低了不少，浦和红钻的实力不论是在日职联和亚洲上都属于顶级，虽然近两年在亚冠上都没有太大作为，但不能否认他的强大，此番做客西悉尼，并不属于弱势一方。</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">结果预测</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">比分：2:2 1:2</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">进球数：3 4</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">竞彩让球：负</span></p><p><br></p><p style="line-height: 1.75em;"><span style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; font-size: 16px;">（本文由310tv特约竞彩专家豪爷推荐）</span></p><p><br></p>
+	    --></div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-tab.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/extension.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var subMenuTab=new auiTab({
+            element:$api.byId('SubMenu'),
+            index:2,
+            repeatClick:false
+        }, function(ret) {
+		    if(ret.index==1){
+		        $("#RichTextBox").show();
+		        $("#MediaList").hide();
+		    }
+		    else if(ret.index==2){
+		        $("#RichTextBox").hide();
+		        $("#MediaList").show();
+		    }
+		});   
+        
+        $("#MediaList").on("click","li",function(){
+            var playLink=$(this).attr("link");
+            api.openWin({
+	            name: 'media_play_frm',
+	            url: 'sub_common_frm.html',
+	            animation:{
+	                type:'movein',
+	                subType:'from_bottom',
+	                duration:300
+	            },
+	            reload:true,
+	            pageParam:{
+	                frameOpts:{
+	                    name:'media_play',
+	                    url:playLink
+	                }
+	            }
+            });
+            
+            if(playLink.indexOf("m.zqsos.com")>-1){
+                var videoW=api.winWidth-20;
+                var scriptStr = "window.onload=function(){ ";
+                    scriptStr += "    var _src=document.querySelector('iframe').src;";
+                    scriptStr += "    document.querySelector('iframe').setAttribute('width','"+videoW+"');";
+                    scriptStr += "    document.querySelector('iframe').src=_src.replace(/w=\\d+/,'w="+videoW+"');";
+                    scriptStr += "}";
+                
+                setTimeout(function(){
+                    api.execScript({
+                        name:'media_play_frm',
+                        frameName:'media_play',
+	                    script: scriptStr
+                    });
+                },300);
+                
+            }
+        });
+    });
+    
+	apiready = function(){
+		g_programID=api.pageParam.ProgramID;
+		AjaxProgramData();
+		
+		setInterval(function(){
+		    RefreshMatchState();
+		},5000)
+	};
+	
+	function AjaxProgramData(){
+	    var url=Global.url.programData;
+	    if(window.g_programID && window.g_programID>0){
+	        url=url + "?pid=" + g_programID;
+	        Fun.showProgress("","",true);
+	        api.ajax({
+	            url:url,
+	            dataType:'text'
+            },function(ret,err){
+            	Fun.hideProgress();
+            	if(!err){
+            	    var matchObj
+            	    try{
+            	        matchObj=JSON.parse(ret);
+            	    }
+            	    catch(e){
+            	        Fun.toast("数据有误");
+            	    }
+            	    
+            	    if(matchObj){
+            	        SetMatchDom(matchObj);
+            	    }
+            	}
+            	else{
+            	    Fun.ajaxErrCallBack(err);
+            	}
+            });
+	    }
+	}
+	
+	function SetMatchDom(matchObj){
+	    var nopicSrc="../image/nopic80x80.gif";
+	
+	    $("#HomeTeam").html(matchObj.HomeTeam);
+	    $("#GuestTeam").html(matchObj.GuestTeam);
+	    $("#HomeFlag").attr("src",matchObj.HomeFlag?matchObj.HomeFlag:nopicSrc);
+	    $("#GuestFlag").attr("src",matchObj.GuestFlag?matchObj.GuestFlag:nopicSrc);	    
+	    $("#MatchTime").html(new Date(matchObj.MatchTime).Format("MM:dd hh:mm"))
+	    
+	    UpdateMatchStateDom(matchObj);
+	    
+	    if(matchObj.ProspectTitle){
+	        $("#RichTextBox>h1").html(matchObj.ProspectTitle);
+	    }
+	    
+	    if(matchObj.ProspectContent){
+	        $("#RichTextBox>div").html(matchObj.ProspectContent);
+	    }
+	    
+	    for(var videoItem in matchObj.VideoList){
+	        var itemHtml='<li class="aui-list-item" link="'+matchObj.VideoList[videoItem]+'" tapmode>';
+	            itemHtml+='<div class="aui-list-item-inner aui-list-item-arrow">';
+	            itemHtml+=    '<div class="aui-list-item-title">'+videoItem+'</div>';
+	            itemHtml+='</div>';
+	            itemHtml+='</li>';
+	        
+	        $("#MediaList").append(itemHtml);
+	    }
+	    
+	    api.parseTapmode();
+	    Fun.imageErrorHandle();
+	}
+	
+	function UpdateMatchStateDom(matchObj){
+	    if(matchObj){
+	        var state=matchObj.State==undefined?matchObj.MatchState:matchObj.State;
+	        var matchStatus=FormatMatchStatus(state);
+	        var matchScore="VS";
+	        var stateClass=matchStatus=="直播中"?"on":(matchStatus=="已结束"?"end":"")
+	        if(matchStatus=="直播中"||matchStatus=="已结束"){
+	            matchScore=matchObj.HomeScore+"-"+matchObj.GuestScore;
+	        }
+	    
+	        $("#MatchStatus").removeClass("on").removeClass("end")
+	                         .addClass(stateClass)
+	                         .find("span").html(matchStatus);
+	        $("#MatchScore").find("b").html(matchScore);
+	    }
+	}
+	
+	function RefreshMatchState(){
+	    if(!(window.g_programID>0)){
+	        return;
+	    }
+	    var allMatchList=Global.getMatchList();
+	    var matchObj;
+	    $.each(allMatchList,function(index,obj){
+	        if(g_programID==obj.ProgramsID){
+	            matchObj=obj;
+	        }
+	    });
+	    
+	    UpdateMatchStateDom(matchObj);
+	}
+</script>
+</html>

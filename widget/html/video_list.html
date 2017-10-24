@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<style>
+			.video-sub-title {
+				background: url(../image/title_bg35x45.jpg) repeat-x;
+				background-size: auto 100%;
+			}
+			.aui-list .video-item-title {
+				color: black;
+			}
+			.aui-list .video-item-tag {
+				color: #2767A7;
+				margin-top: 0.25rem;
+			}
+		</style>
+	</head>
+	<script type="text/html" id="VideoItemTpl">
+		<li class="aui-list-item" videoid="<%=Id%>" tapmode>
+			<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-media">
+					<img src="<%=ImgSrc%>"/>
+				</div>
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-text video-item-title">
+						<%=Title%>
+					</div>
+					<div class="aui-list-item-text aui-font-size-12 video-item-tag">
+						标签：<%=Tages%>
+					</div>
+				</div>
+			</div>
+		</li>
+	</script>
+	<body>
+	    <div class="screen-status" id="Status">
+	        数据加载中
+	    </div>
+		<div class="aui-content" id="Main" style="display:none">
+			<!--最新视频 begin-->
+			<ul class="aui-list aui-media-list" id="VideoList">
+				<li class="aui-list-header video-sub-title">
+					最新视频
+				</li>
+				<!--<li class="aui-list-item">
+					<div class="aui-media-list-item-inner">
+						<div class="aui-list-item-media">
+							<img src="http://m.310tv.com/uplodeImg/video/phone/20161107150054.jpg"/>
+						</div>
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-text video-item-title">
+								【原创】C罗梅西十大进球大PK
+							</div>
+							<div class="aui-list-item-text aui-font-size-12 video-item-tag">
+								标签：西甲直播 皇马 巴萨 梅西 C罗
+							</div>
+						</div>
+					</div>
+				</li>-->
+			</ul>
+			<div id="MoreBlock" class="bottom-more-btn">
+				上拉加载更多
+			</div>
+			<!--end 最新视频-->
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/artTemplate-native.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript">
+
+		apiready = function() {
+		    //g_sportsType=api.pageParam.sportsType;
+		    g_sportsType=Global.getSportsType();
+	        g_pageIndex=0;
+	        g_pageSize=10;
+		          
+            g_pullUpLoadingObj=CustomPullUpLoading(function(isLoading,loadObj){
+                if(!isLoading&&!loadObj.isNoMore){
+                    g_pullUpLoadingObj.setLoading();
+                    AjaxVideoPageList(AppendVideoPageList);    
+                }
+            });
+			
+			//首次加载
+			AjaxVideoPageList(AppendVideoPageList);
+			
+			$("#VideoList").on("click", ".aui-list-item", function() {
+			    var videoId=$(this).attr("videoid");
+				api.openWin({
+					name : 'video_detail_frm',
+					url : 'sub_common_frm.html',
+					animation : {
+						type : 'movein',
+						subType : 'from_right',
+						duration : 300
+					},
+					pageParam : {
+						frameOpts : {
+							name : 'video_detail',
+							url : 'video_detail.html',
+							bounces : true,
+							pageParam:{
+							    videoId:videoId
+							}
+						}
+					}
+				});
+			});
+		};
+		
+		function AjaxVideoPageList(callback){
+		    var url=Global.url.videoPageListData;
+		    var pageIndex=g_pageIndex;
+		    var pageSize=g_pageSize;
+		    var sportsType=g_sportsType;
+		    
+		    url=url+"?pageIndex="+(pageIndex+1)+"&pageSize="+pageSize+"&sportsType="+sportsType;
+		    
+		    api.ajax({
+	            url:url,
+	            dataType:'text',
+            },function(ret,err){
+                var isHasError=false;
+            	if(!err){
+            	    var videoPageListObj;
+                    try{
+                        videoPageListObj=JSON.parse(ret);
+                    }
+                    catch(e){
+                       Fun.toast("数据类型有误");
+                       isHasError=true;
+                    }
+                    
+                    if(videoPageListObj&&videoPageListObj.IsSuccess){
+                        callback&&callback(videoPageListObj);
+                    }
+                    else{
+                        isHasError=true;
+                    }
+            	}else{
+            	    Fun.ajaxErrCallBack(err);
+            	    isHasError=true;
+            	}
+            	
+            	if(isHasError&&window.g_pullUpLoadingObj){
+            	    if(!g_pullUpLoadingObj.isNoMore){
+            	        g_pullUpLoadingObj.setLoaded();
+            	    }
+            	}
+            });
+		}
+		
+		function AppendVideoPageList(videoPageListObj){
+		    var videoPageList=videoPageListObj.VideoPageList;
+		    var pageIndex=videoPageListObj.PageIndex;
+		    var pageSize=videoPageListObj.PageSize;
+		    
+		    if(videoPageList&&videoPageList.length>0){
+		        $.each(videoPageList,function(videoIndex,videoObj){
+		            $("#VideoList").append(template("VideoItemTpl",videoObj));
+		        });
+		        
+		        g_pageIndex=pageIndex+1;
+		        g_pullUpLoadingObj.setLoaded(true);
+		    }else{
+		        g_pullUpLoadingObj.setNoMore();
+		    }
+		    
+		    $("#Status").hide();
+		    $("#Main").show();
+		    Fun.imageErrorHandle();
+		    Fun.tap();
+		}
+	</script>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <style>
+        .info-eye{
+            min-height:1rem;padding-left:1.2rem;
+            background:url(../icon/read_icon60x60.png) no-repeat;
+            background-size:1rem;background-position:left top;
+        }
+        .recommend-title{
+            border-bottom: 1px solid #D2E0EC;
+            margin-bottom:-1px;position: relative;z-index:9
+        }
+        .recommend-title .recommend-title-text{
+            font-size:0.8rem;padding:0.4rem 0; position: relative; display: inline-block;
+        }
+        .recommend-title .recommend-title-bottom-line{
+            position: absolute; left: 0; bottom: -1px;
+            width: 100%; height: 1px; background-color: #379be9;
+        }
+    </style>
+</head>
+<body>
+    <div id="StatusScreen" class="aui-padded-15" style="position:absolute;top:0;left:0;width:100%;height:100%;color:gray;text-align:center;">
+	                              数据加载中...
+	 </div>
+	<div class="aui-content-padded" id="Main" style="display:none">
+	    <h1 class="aui-font-size-18 font-bold" id="Title">
+	        <!--他让伊布更牛！曼联真大脑-->
+	    </h1>
+	    <div class="aui-info">
+	        <div class="aui-info-item" id="AddTime">
+	        <!--2017-02-23 14:56-->
+	        </div>
+	        <div class="aui-info-item">
+	          <div class="info-eye" id="Hits">
+	            <!--96-->
+	          </div>
+	        </div>
+	    </div>
+	    <div id="Content" style="display:">
+	        
+	    </div>
+	    <div class="aui-margin-t-10 recommend-title">
+	        <div class="recommend-title-text">
+                                         为你推荐
+              <em class="recommend-title-bottom-line"></em>
+            </div>
+	    </div>
+	    <ul class="aui-list aui-list-in aui-font-size-14" id="RecommendList">
+	        <!--<li class="aui-list-item">
+	            <div class="aui-list-item-inner">
+	                <div class="aui-ellipsis-1">
+	                英超第26轮 曼城vs曼联 免费视频直播地址
+	                </div>	                 
+	            </div>	                             
+	        </li>-->	        
+	    </ul>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+
+	apiready = function(){
+		g_newsId=api.pageParam.newsId;
+		AjaxNewsInfoData(SetNewsDom);
+		
+		$("#RecommendList").on("click",".aui-list-item",function(){
+		    var newsId=$(this).attr("nid");
+		    if(newsId>0){
+		        api.openWin({
+	                name: 'news_detail_recomm_'+newsId,
+	                url: 'sub_common_frm.html',
+	                animation : {
+						type : 'movein',
+						subType : 'from_right',
+						duration : 300
+					},
+					reload : true,
+					pageParam : {
+						frameOpts : {
+							name : 'news_detail_'+newsId,
+							url : 'news_detail.html',
+							bounces : true,
+							pageParam:{
+							    newsId:newsId
+							}
+						}
+					}
+                });
+		    }
+		    
+		});
+	};
+	
+	function AjaxNewsInfoData(callback){
+	    var url=Global.url.newsData+"?nid="+g_newsId;
+	    api.ajax({
+	        url:url,
+	        dataType:'text'
+        },function(ret,err){
+        	if(!err){
+        	    var newsObj;
+        	    
+        	    try{
+        	        newsObj=JSON.parse(ret);       	        
+        	    }
+        	    catch(e){
+        	        $("#StatusScreen").html("数据加载失败，请返回重试");
+                    Fun.toast("数据类型有误");
+        	    }
+        	    
+        	    if(newsObj){
+        	       if(newsObj.IsSuccess){
+        	           if(!newsObj.NewsInfo){
+        	               $("#StatusScreen").html("该新闻不存在，请返回选择其他新闻");
+        	           }else{
+        	               callback&&callback(newsObj)
+        	           }
+        	       }
+        	       else{
+        	           $("#StatusScreen").html("数据加载失败，请返回重试");
+        	       } 
+        	    }
+        	    
+        	}else{
+        	    $("#StatusScreen").html("数据加载失败，请返回重试");
+        	    Fun.ajaxErrCallBack(err);
+        	}
+        });
+	}
+	
+	function SetNewsDom(newsObj){
+	    var newsInfoObj=newsObj.NewsInfo;
+	    var recommendNewsList=newsObj.RecommendNews;
+ 	
+	    $("#Title").html(newsInfoObj.Title);
+	    $("#AddTime").html(newsInfoObj.AddTime);
+	    $("#Hits").html(newsInfoObj.Hits);
+	    $("#Content").html(newsInfoObj.Content);
+	    
+	    if(recommendNewsList&&recommendNewsList.length>0){	        
+	        $.each(recommendNewsList,function(rIndex,rObj){
+	            var recommItemHtml='<li class="aui-list-item" nid="'+rObj.Id+'" tapmode>';
+	                recommItemHtml+='<div class="aui-list-item-inner">';
+	                recommItemHtml+=    '<div class="aui-ellipsis-1">';
+	                recommItemHtml+= rObj.Title;
+	                recommItemHtml+='    </div>	    ';
+	                recommItemHtml+='</div>    ';    
+	                recommItemHtml+='</li>    ';  
+	                
+	                $("#RecommendList").append(recommItemHtml);	
+	        });	        	                
+	    }
+	    
+	    $("#StatusScreen").hide();
+	    $("#Main").show();
+	    
+	    Fun.imageErrorHandle();
+	    api.parseTapmode();
+	}
+	
+</script>
+</html>

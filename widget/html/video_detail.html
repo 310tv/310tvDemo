@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/common.css"/>
+    <style>
+    	.video-box{
+    	    position:relative;width:100%;height:10.5rem;background-color: black;
+    	}
+    	.full-btn{
+    	    position:absolute;background-color:rgba(173,216,230,0.5);width:2rem;
+    	    height:2rem;top:50%;margin-top:-1rem;right:0;border-radius:50%
+    	}
+    </style>
+</head>
+<body>
+    <div class="screen-status" id="Status">
+        数据加载中
+    </div>
+	<div class="aui-content" id="Main" style="display: none">
+	   <div class="aui-content-padded">
+	       <h1 class="aui-font-size-18 font-bold" id="Title">【原创】巴萨5-0羞辱皇马 比利亚两球 皇马人永远的耻辱</h1>
+	       <div class="aui-info" id="Related">2016-11-07 阅读:973</div>
+	   </div>
+	   <div id="VideoBox" class="video-box">
+	       <video id="video" controls="controls" class="full-size" src="http://video.310tv.com/football/2016/11/css1107meixi012.mp4" autoplay="autoplay"></video>
+	       <div id="FullBtn" class="full-btn">
+	       </div>
+	   </div>
+	   <div class="aui-content-padded" id="Content">
+	       <div>
+	       <p></p><p>&nbsp;&nbsp;&nbsp;</p><p>&nbsp;</p><p>&nbsp;<font face="宋体"><font face="宋体"><font size="4" face="宋体"><sup><font face="宋体">北京时间2010年11月30日凌晨，西甲联赛第13轮迎来举世瞩目的西班牙国家德比战，巴塞罗那坐镇诺坎普球场5比0横扫皇家马德里，取得国家德比的五连胜，同时反超皇马两分升至西甲积分榜首位。</font></sup></font></font></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <strong><u><a target="_blank" href="http://www.310tv.com/video/41966.html">【视频】&nbsp;&nbsp;&nbsp;&nbsp;小小<font face="宋体">罗逆天滞空PK梅球王惊人弹跳 最强头槌破门对决</font></a></u></strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <u><a target="_blank" href="http://www.310tv.com/video/41967.html"><strong>【视频】&nbsp;&nbsp;&nbsp;&nbsp;梅球王2016年度8大任意球 致命弧线曾3杀</strong></a></u><strong>塞维利亚</strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <strong><u><a target="_blank" href="http://www.310tv.com/video/41965.html">【视频】</a></u></strong>&nbsp;&nbsp;&nbsp;&nbsp;<strong><u><a target="_blank" href="http://www.310tv.com/video/41965.html">十大进球大PK</a>&nbsp; C罗PK梅西</u></strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <u><a target="_blank" href="http://www.310tv.com/video/41968.html"><strong>【视频】&nbsp;&nbsp; 经典回顾</strong></a></u><strong>巴萨5-0羞辱皇马</strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>点击观看》》》&nbsp; 【<u><a target="_blank" href="http://www.310tv.com/video/">更多精彩视频推荐</a></u>】&nbsp; 【<u><a target="_blank" href="http://www.310tv.com/">免费高清直播</a></u>】&nbsp;</sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <strong><u><a target="_blank" href="http://www.310tv.com/video/41854.html">【视频】&nbsp; 德甲第9轮五佳球</a></u></strong>：<strong>罗本莱万合体 神人晃晕5人后防造神球</strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <strong><u><a target="_blank" href="http://www.310tv.com/video/41858.html">【视频】&nbsp; 欧冠第4轮第1日五佳球</a></u></strong> <strong>丁丁弯刀破巴萨2悍将世界波</strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p><p><font size="4"><sup>》》》》&nbsp; <strong><u><a target="_blank" href="http://www.310tv.com/video/41857.html">【视频】&nbsp; 欧冠第4轮第2日五佳球</a></u></strong> <strong>贝尔天外飞仙美如画</strong></sup></font></p><p><font size="4"><sup>&nbsp;</sup></font></p>
+	       </div>
+	   </div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+        
+    });
+    
+	apiready = function(){
+	   g_videoId=api.pageParam.videoId;
+	   AjaxVideoInfoData(SetVideoDom);
+	   
+	   
+       var videoPlayer=api.require('videoPlayer');
+       $("#FullBtn").bind("click",function(){
+           videoPlayer.play({
+	           path: $('#video').attr('src'),
+	           autoPlay: true
+           },function(ret,err){
+           	//coding...
+           });
+       });
+	};
+	
+	function AjaxVideoInfoData(callback){
+	    var url=Global.url.videoData+"?vid="+g_videoId;
+	    api.ajax({
+	        url:url,
+	        dataType:'text'
+        },function(ret,err){
+        	if(!err){
+        	    var videoObj;
+        	    
+        	    try{
+        	        videoObj=JSON.parse(ret);       	        
+        	    }
+        	    catch(e){
+        	        $("#Status").html("数据加载失败，请返回重试");
+                    Fun.toast("数据类型有误");
+        	    }
+        	    
+        	    if(videoObj){
+        	        if(videoObj.IsSuccess){
+        	            if(!videoObj.VideoInfo){
+        	                $("#Status").html("该视频不存在，请返回选择其他视频");
+        	            }
+        	            else{
+        	                callback&&callback(videoObj.VideoInfo);
+        	            }
+        	        }else{
+        	            $("#Status").html("数据加载失败，请返回重试");
+        	        }
+        	    }
+        	}
+        	else{
+        	    $("#Status").html("数据加载失败，请返回重试");
+        	    Fun.ajaxErrCallBack(err);
+        	}
+        });
+	}
+	
+	function SetVideoDom(videoInfo){
+	    $("#Title").html(videoInfo.Title);
+	    $("#Related").html(videoInfo.AddTime+"&nbsp;&nbsp;阅读:"+videoInfo.Hits);
+	    $("#video").attr("src",videoInfo.VideoLink);
+	    $("#Content").html(videoInfo.Content);
+	    
+	    $("#Status").hide();
+	    $("#Main").show();
+	    
+	    Fun.imageErrorHandle();
+	}
+</script>
+</html>

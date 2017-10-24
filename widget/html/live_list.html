@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>直播列表</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		<style type="text/css">
+			.aui-list .list-live-date-item {
+				height: 1.6rem;
+				line-height: 1.6rem;
+				text-align: center;
+				background-color: #F7F7F7;
+			}
+			.aui-list .item-title {
+				line-height: 1.2rem;
+				overflow: hidden;
+				width: 100%;
+			}
+			.item-title .color-block {
+				float: left;
+				height: 1.2rem;
+				background-color: gray;
+				width: 0.25rem;
+				margin: 0 0.25rem;
+			}
+			.item-title .sport-type {
+				float: left;
+				font-weight: bold;
+				padding: 0px 5px;
+				color: gray;
+			}
+			.item-title .sport-time {
+				float: left;
+				padding: 0px 5px;
+				color: #aaaaaa;
+			}
+			.item-title .sport-status {
+				float: left;
+				padding: 0px 5px;
+				color: #999;
+			}
+			.item-team-box {
+				width: 100%;
+				border: none;
+				margin-top: 0.25rem;
+			}
+			.item-team-box .attention-btn {
+				width: 1.75rem;
+				height: 1.75rem;
+				background: url(../icon/settop_icon51x51.jpg) no-repeat center center;
+				background-size: 1.2rem;
+			}
+			.item-team-box .attention-btn.on {
+				background: url(../icon/settop_icon_on51x51.jpg) no-repeat center center;
+				background-size: 1.2rem;
+			}
+			.item-team-box .attention-td {
+				width: 1%;
+			}
+			.item-team-box .home-td, .item-team-box .guest-td {
+				width: 40%;
+				font-weight: bold;
+			}
+			.item-team-box .vs-td {
+				width: 19%
+			}
+			.item-team-box .team-pic {
+				text-align: center;
+				padding-bottom: 0.2rem;
+			}
+			.item-team-box .team-pic img {
+				height: 3rem;
+				margin: 0 auto;
+			}
+			.vs-td.on,
+			.sport-status.on{
+			    color:blue
+			}
+			.vs-td.end,
+			.sport-status.end{
+			    color:red
+			}
+			.sport-status img{
+			    display:none;
+			}
+			.sport-status.on img{
+			    display:inline;
+			}
+		</style>
+	</head>
+	<script type="text/html" id="MatchItemTpl">
+		<li id="<%=ProgramsID%>" class="aui-list-item aui-list-item-arrow" tapmode pid="<%=ProgramsID%>">
+			<div class="aui-list-item-inner">
+				<div class="item-title">
+					<div class="color-block" style="background-color:<%=Color%>"></div>
+					<div class="sport-type" style="color:<%=Color%>">
+						<%=SclassName%>
+					</div>
+					<div class="sport-time">
+						<%=DataTime%>
+					</div>
+					<div class="sport-status <%=StateStr=='已结束'?'end':(StateStr=='直播中'?'on':'')%>">
+						<span><%=StateStr%></span>
+						<img src="../image/football_in.gif"/>
+					</div>
+				</div>
+				<table class="item-team-box" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="attention-td"><div class="attention-btn <%=IsAttention?'on':''%>" tapmode></div></td>
+						<td class="home-td aui-text-center">
+						<div class="team-pic"><img src="http://zq.win007.com/Image/team/<%=HomeFlag%>"/>
+						</div> <%=HomeTeam%> </td>
+						<td class="vs-td aui-text-center <%=StateStr=='已结束'?'end':(StateStr=='直播中'?'on':'')%>"> <%=ScoreStr%> </td>
+						<td class="guest-td aui-text-center">
+						<div class="team-pic"><img src="http://zq.win007.com/Image/team/<%=GuestFlag%>"/>
+						</div> <%=GuestTeam%> </td>
+					</tr>
+				</table>
+			</div>
+		</li>
+	</script>
+	<body>
+        <div id="StatusScreen" class="screen-status">
+            数据加载中...
+        </div>
+		<div class="aui-content" id="Main" style="display:none;">
+			<ul id="MatchList" class="aui-list aui-media-list aui-font-size-14">
+				<!--<li class="list-live-date-item">
+					2017-20-04 星期二
+				</li>-->
+				<!--<li class="aui-list-item aui-list-item-arrow" tapmode>
+					<div class="aui-list-item-inner">
+						<div class="item-title">
+							<div class="color-block" style="background-color:#6C6C00"></div>
+							<div class="sport-type" style="color:#6C6C00">
+								保超
+							</div>
+							<div class="sport-time">
+								21:00
+							</div>
+							<div class="sport-status on">
+								<span>未开始</span><img src="../image/football_in.gif"/>
+							</div>
+						</div>
+						<table class="item-team-box" cellpadding="0" cellspacing="0">
+							<tr>
+								<td class="attention-td"><div class="attention-btn"></div></td>
+								<td class="home-td aui-text-center">
+								<div class="team-pic"><img src="http://zq.win007.com/Image/team/images/20130812201039.jpg"/>
+								</div> 查洛摩利 </td>
+								<td class="vs-td aui-text-center"> VS </td>
+								<td class="guest-td aui-text-center">
+								<div class="team-pic"><img src="http://zq.win007.com/Image/team/images/20130812201013.jpg"/>
+								</div> 贝尔罗 </td>
+							</tr>
+						</table>
+					</div>
+				</li>		-->		
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/zepto.min.js"></script>
+	<script type="text/javascript" src="../script/artTemplate-native.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript" src="../script/extension.js"></script>
+	<script type="text/javascript">
+	    g_change_data="[]";
+	    g_isShowErr=true;
+		$(function() {			
+			$(".aui-list").on("click", ".aui-list-item,.attention-btn", function(el) {
+				if ($(el.currentTarget).hasClass("attention-btn")) {
+					$(el.currentTarget).toggleClass("on");
+					var pid=$(el.currentTarget).parents(".aui-list-item").attr("pid");
+					if($(el.currentTarget).hasClass("on")){
+					    Fun.toast('关注成功');
+					    Global.addAttentionId(pid);
+					}
+					else{
+					    Global.removeAttentionId(pid);
+					}
+					SetNavAttenBadge();					
+					return;
+				};
+				
+				var pid=$(this).attr("pid");
+				
+				api.openWin({
+					name : 'match_play_list_frm',
+					url : 'sub_common_frm.html',
+					animation : {
+						type : "push",
+						subType : "from_right",
+						duration : 300
+					},
+					reload : true,
+					pageParam : {
+						frameOpts : {
+							name : 'match_play_list',
+							url : 'match_play_list.html',
+							bounces : true,
+							pageParam : {
+							    ProgramID:pid
+							}
+						}
+					}
+				});
+			});
+		});
+		
+		apiready = function() {
+		    api.parseTapmode();
+		    		    
+			api.setRefreshHeaderInfo({
+				visible : true,
+				showTime : false,
+				bgColor : 'rgb(255,255,255)',
+				textColor : 'rgb(0,0,0)',
+				textLoading : '加载中...'
+			}, function(ret, err) {			    
+				AjaxData(function(){
+				    SetMatchList();
+				    SetNavAttenBadge();
+				});
+			});
+			
+			
+			AjaxData(function(){
+			    SetMatchList();
+			    SetNavAttenBadge();			    
+			});	
+			
+			setInterval(function(){
+			    Change(function(changeData){
+			        ChangeCallBack(changeData);
+			    });
+			},5000)		
+		};
+		
+		//获取直播赛事数据
+		function AjaxData(callback){
+		    var url=Global.url.liveData+"?t="+Date.parse(new Date());
+		    $("#StatusScreen").html("数据加载中...");
+		    Fun.showProgress();
+		    api.ajax({
+	            url:url
+            },function(ret,err){
+                Fun.hideProgress();
+                api.refreshHeaderLoadDone();
+                if(!err){
+                    if(ret instanceof Array){
+                        Global.setMatchList(ret);
+                        callback&&callback();
+                        $("#StatusScreen").hide();
+                        $("#Main").show();
+                    }
+                    else{
+                        $("#StatusScreen").html("加载过程中有误，请重试").show();
+                        $("#Main").hide();
+                        Fun.toast("数据类型有误");
+                    }
+                }
+                else{
+                    Fun.ajaxErrCallBack(err);
+                    $("#StatusScreen").html("加载过程中有误，请重试").show();
+                    $("#Main").hide();
+                }
+            });
+		};
+		
+		//根据赛事数据和类型加载赛事dom
+		function SetMatchList(){
+		    var sportsType=Global.getSportsType();
+		    var liveStatus=Global.getLiveStatus();
+		    var matchList=Global.getMatchList();
+		    
+		    $("#MatchList").html("");
+		    window.scrollTo(0,0);
+		    
+		    var time="";
+		    var tempEndList=[];
+		    $.each(matchList,function(index,item){	        	        
+		        var isMatch=item.SportsType==sportsType;
+		        isMatch=isMatch&&IsMatchLiveStatus(liveStatus,item);
+		        
+		        if(isMatch){
+		            
+		            //时间行
+		            var newTime=FormatMatchTime(item.DataTime);
+		            if(time!=newTime){
+		                //添加新时间行之前先加入上一个时间的已结束赛事
+		                $.each(tempEndList,function(endIndex,endItem){
+		                    $("#MatchList").append(template("MatchItemTpl",endItem));
+		                   
+		                });
+		                //重置
+		                tempEndList=[];
+		                
+		                var dateHtml='<li class="list-live-date-item">';
+					        dateHtml+=newTime;
+				            dateHtml+='</li>';
+				        $("#MatchList").append(dateHtml);
+				        time=newTime;
+		            }
+		        	
+		        	//数据行
+		            item.DataTime=new Date(item.DataTime).Format("hh:mm");
+		            item.StateStr=FormatMatchStatus(item.State);
+		            item.ScoreStr=(item.State>=1||item.State==-1)?(item.HomeScore+"-"+item.GuestScore):"VS";  
+		            item.IsAttention=Global.isExistAttentionId(item.ProgramsID);
+		            //已结束赛事
+		            if(item.State==-1){
+		                tempEndList.push(item);
+		            }else{
+		                $("#MatchList").append(template("MatchItemTpl",item));
+		            }		            		           		          		            		            
+		        }
+		    });
+		    
+		    //最后一个时间行下的已结束赛事
+		    $.each(tempEndList,function(endIndex,endItem){
+		       $("#MatchList").append(template("MatchItemTpl",endItem));		                   
+		    });
+		    
+		    if(!$("#MatchList").html()){
+		        $("#MatchList").append('<li class="aui-text-center aui-padded-15" style="color:#cccccc">暂无数据</li>');
+		    }
+		    
+		    Fun.imageErrorHandle();
+		    window.api&&api.parseTapmode();
+		}
+	    
+	    //该场赛事是否符合@liveStatus赛事状态
+	    function IsMatchLiveStatus(liveStatus,matchObj){
+	        var attentionIds=Global.getAttentionIds();
+	        var isMatch=false;
+	        
+	        isMatch=liveStatus==1
+	                || (liveStatus==2&&matchObj.State>=1)
+	                || (liveStatus==3&&matchObj.State==0)
+	                || (liveStatus==4&&matchObj.State==-1)
+	                || (liveStatus==5&&Global.isExistAttentionId(matchObj.ProgramsID));
+	        
+	        return isMatch;
+	    }
+	    
+	    //赛事时间格式化 yyyy-MM-dd 星期n
+	    function FormatMatchTime(matchDate){
+	        var dateArray=["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+	                
+	        return new Date(matchDate).Format("yyyy-MM-dd")+" "+dateArray[new Date(matchDate).getDay()];
+	    }	    	    
+	    
+	    //设置父frame的关注角标
+	    function SetNavAttenBadge(){
+	        api.execScript({
+	            frameName:'live_list_frm',
+	            script: 'SetAttenBadge();'
+            });
+	    }
+	    
+	    //轮询更新
+	    function Change(callback){
+	        var url=Global.url.changeData+"?"+Date.parse(new Date());
+	        api.ajax({
+	            url:url,
+	            dataType:'text'
+            },function(ret,err){                
+            	if(err==""){
+                    if(ret!=g_change_data){
+                        var newChangeData;
+                        try{
+                            newChangeData=JSON.parse(ret);
+                            g_change_data=ret;
+                        }
+                        catch(e){
+                        }
+                        
+                        newChangeData&&callback&&callback(newChangeData);
+                    }
+                }
+                else{
+                    if(g_isShowErr){
+                        g_isShowErr=false;
+                        Fun.ajaxErrCallBack(err);
+                        setTimeout(function(){
+                            g_isShowErr=true;
+                        },5*60*1000);
+                    }
+                    
+                }
+            });
+	    }
+	    
+	    function ChangeCallBack(changeData){
+	        var matchList=Global.getMatchList();
+	        if(matchList.length>0&&changeData.length>0){
+	            for(var i=0;i<changeData.length;i++){
+	                var changeItem=changeData[i];
+	                var changePID=changeItem.ProgramsID;
+	                var newHomeScore=changeItem.HomeScore;
+	                var newGuestScore=changeItem.GuestScore;
+	                var newState=changeItem.State;
+	                var newChangeTime=changeItem.ChangeTime;
+	                
+	                $.each(matchList,function(mIndex,mItem){
+	                    if(mItem.ProgramsID==changePID){   
+	                        UpdateMatchDom(mItem,changeItem);
+	                           
+	                        mItem.HomeScore=newHomeScore;
+	                        mItem.GuestScore=newGuestScore;
+	                        mItem.State=newState;
+	                        mItem.ChangeTime=newChangeTime;                        	                        
+	                    }
+	                });
+	            }
+	            
+	            Global.setMatchList(matchList);
+	        }
+	        
+	    }
+	    
+	    function UpdateMatchDom(oldMatchObj,newMatchObj){
+	        if(oldMatchObj&&newMatchObj&&oldMatchObj.ProgramsID==newMatchObj.ProgramsID){
+	            var pid=newMatchObj.ProgramsID;
+	            var stateStr=FormatMatchStatus(newMatchObj.State);
+	            var scoreStr=(newMatchObj.State>=1||newMatchObj.State==-1)?(newMatchObj.HomeScore+"-"+newMatchObj.GuestScore):"VS";
+	            var stateClass=stateStr=='已结束'?'end':(stateStr=='直播中'?'on':'');
+	            
+	            
+	            $("#"+pid).find(".sport-status").removeClass("on")
+	                                            .removeClass("end")
+	                                            .addClass(stateClass)
+	                                            .find("span").html(stateStr);
+	            $("#"+pid).find(".vs-td").removeClass("on")
+	                                     .removeClass("end")
+	                                     .addClass(stateClass)
+	                                     .html(scoreStr);
+	        }
+	    }
+	</script>
+</html>
